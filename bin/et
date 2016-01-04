@@ -28,7 +28,6 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
 try:
     from etcli.utils import retrieve_de, retrieve_subs, retrieve_sentevent, describe_de, describe_all_de, retrieve_openevent, retrieve_bounceevent, create_de_row
 except Exception as e:
-    raise e
     print("Invalid ClientID/ClientSecret. Please set the correct credentials.")
     configure()
     sys.exit()
