@@ -4,16 +4,16 @@ with open('README.md') as f:
     readme = f.read()
 
 setup(
-    name = "et_cli",
+    name = "et-cli",
     version = "0.0.1",
-    packages=['et_cli'],
+    packages=['etcli'],
     description='ExactTarget CLI Tool',
     long_description=readme,
-    url='https://github.com/tzmfreedom/et_cli',
+    url='https://github.com/tzmfreedom/et-cli',
     author='makoto tajitsu',
     author_email='makoto_tajitsu@hotmail.co.jp',
     license='MIT',
-    scripts=['bin/et_cli'],
+    scripts=['bin/et'],
     install_requires=[
         'FuelSDK',
     ],
