@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+# coding:utf-8
+import sys
+import argparse
+import json
+import os
+
+def configure():
+    fuelsdk_config = os.path.expanduser('~/.fuelsdk/config.python')
+    if os.path.isfile(fuelsdk_config) and raw_input('Do you want to overwrite ~/.fuelsdk/config.python?(y/n)') != 'y':
+        return
+
+    client_id = raw_input("Input Your ExactTarget Client ID: ")
+    client_secret = raw_input("Input Your ExactTarget Client Secret: ")
+
+    fuelsdk_dir = os.path.expanduser("~/.fuelsdk")
+    if not os.path.isdir(fuelsdk_dir):
+        os.mkdir(fuelsdk_dir)
+
+    f = open(fuelsdk_config, "w")
+    f.write("""[Web Services]
+appsignature: none
+clientid: {0}
+clientsecret: {1}
+defaultwsdl: https://webservice.exacttarget.com/etframework.wsdl
+authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".format(client_id, client_secret))
+
+try:
+    from et_cli.et_util import retrieve_de, retrieve_subs, retrieve_sentevent, describe_de, describe_all_de, retrieve_openevent, retrieve_bounceevent, create_de_row
+except Exception as e:
+    print("Invalid ClientID/ClientSecret. Please set the correct credentials.")
+    configure()
+    sys.exit()
+
+parser = argparse.ArgumentParser(description='Output files that is created by a csv file and a template.')
+parser.add_argument('command', nargs='?', type=str, help='')
+parser.add_argument('-c', '--customer_key', type=str, help='')
+parser.add_argument('-a', '--attributes', type=str, help='')
+
+args = parser.parse_args()
+if args.command == "retrieve_de" :
+    retrieve_de(args.customer_key)
+elif args.command == "describe_all_de":
+    describe_all_de()
+elif args.command == "describe_fields":
+    fields = describe_de(args.customer_key)
+    print(json.dumps(fields))
+elif args.command == "retrieve_subs":
+    retrieve_subs()
+elif args.command == "retrieve_sentevent":
+    retrieve_sentevent(args.customer_key)
+elif args.command == "retrieve_openevent":
+    retrieve_openevent(args.customer_key)
+elif args.command == "retrieve_bounceevent":
+    retrieve_bounceevent(args.customer_key)
+elif args.command == "create_de_row":
+    create_de_row(args.customer_key, args.attributes)
+elif args.command == "configure":
+    configure()
+else:
+    print("[{}] command does not exist.".format(args.command))
