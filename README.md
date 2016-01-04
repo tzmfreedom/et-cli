@@ -1,2 +1,2 @@
-# et_cli
+# et-cli
 ExactTarget CLI Tool.
