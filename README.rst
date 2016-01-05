@@ -1,37 +1,40 @@
-# et-cli
+et-cli
+===============
+
 ExactTarget CLI Tool. This tool use FuelSDK(https://github.com/salesforce-marketingcloud/FuelSDK-Python).
 
-## Requirements
+Requirements
+------------
 Python 2.7.x
 
-## Installation
-```bash
-$ pip install et-cli
-```
+Installation
+------------
+You can use pip to install et-cli::
 
-## Configuration
-```bash
+$ pip install et-cli
+
+Configuration
+-------------
+::
+
 $ et configure
-```
+
 'et configure' command create configure file in your home directory(~/.fuelsdk/config.python).
 
-## Usage
-* Describe all DataExtension
-```bash
+Usage
+-----
+Describe all DataExtension::
+
 $ et describe_all_de
-```
 
-* Retrive all rows for DataExtension
-```bash
+Retrive all rows for DataExtension::
+
 $ et retrieve_de -c DATAEXTENSION_EXTERNALKEY
-```
-* Retrieve Subscribers.
-```bash
+
+Retrieve Subscribers::
+
 $ et et retrieve_subs
-```
 
-* Describe DataExtension fields
-```bash
+Describe DataExtension fields::
+
 $ et describe_fields -c DATAEXTENSION_EXTERNALKEY
-```
-
