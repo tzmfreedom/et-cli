@@ -32,12 +32,14 @@ def describe_de(customer_key):
     response = myDEColumn.get()
     return [convert_field_to_dict(result, de_target_fields) for result in response.results]
 
+
 def convert_field_to_dict(field, target_fields):
     converted_dict = {}
     for field_name in target_fields:
         if hasattr(field, field_name):
             converted_dict[field_name] = getattr(field, field_name)
     return converted_dict
+
 
 def retrieve_de(customer_key):
     """
@@ -66,6 +68,7 @@ def retrieve_de(customer_key):
 
     sys.exit()
 
+
 def describe_all_de():
     """
     describe all data extension.
@@ -83,6 +86,7 @@ def describe_all_de():
 
     for result in response.results:
         writer.writerow([result.Name.encode("utf-8"), result.CustomerKey.encode("utf-8"), result.ObjectID.encode("utf-8")])
+
 
 def retrieve_subs():
     """
@@ -115,6 +119,7 @@ def retrieve_subs():
 
         writer.writerow(fields)
 
+
 def retrieve_triggeredsend(customer_key):
     """
     retrive a triggered send with customer key.
@@ -131,6 +136,7 @@ def retrieve_triggeredsend(customer_key):
     for result in getResponse.results:
         return result.ObjectID
     return ""
+
 
 def retrieve_sentevent(customer_key):
     """
@@ -155,6 +161,7 @@ def retrieve_sentevent(customer_key):
         getResponse = getSentEvent.getMoreResults()
         for result in getResponse.results:
             writer.writerow([result.EventDate, result.SubscriberKey])
+
 
 def retrieve_openevent(customer_key):
     """
@@ -181,6 +188,7 @@ def retrieve_openevent(customer_key):
         for result in getResponse.results:
             writer.writerow([result.EventDate, result.SubscriberKey])
 
+
 def retrieve_bounceevent(customer_key):
     """
     retrieve all bounce event with triggered send's customer key.
@@ -205,6 +213,7 @@ def retrieve_bounceevent(customer_key):
         getResponse = getSentEvent.getMoreResults()
         for result in getResponse.results:
             writer.writerow([result.EventDate, result.SubscriberKey])
+
 
 def create_de_row(customer_key, attributes_json):
     """

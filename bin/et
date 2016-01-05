@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 
+
 def configure():
     fuelsdk_config = os.path.expanduser('~/.fuelsdk/config.python')
     if os.path.isfile(fuelsdk_config) and raw_input('Do you want to overwrite ~/.fuelsdk/config.python?(y/n)') != 'y':
@@ -32,13 +33,13 @@ except Exception as e:
     configure()
     sys.exit()
 
-parser = argparse.ArgumentParser(description='Output files that is created by a csv file and a template.')
+parser = argparse.ArgumentParser(description='ExactTarget Command Line Interface Tool.')
 parser.add_argument('command', nargs='?', type=str, help='')
 parser.add_argument('-c', '--customer_key', type=str, help='')
 parser.add_argument('-a', '--attributes', type=str, help='')
 
 args = parser.parse_args()
-if args.command == "retrieve_de" :
+if args.command == "retrieve_de":
     retrieve_de(args.customer_key)
 elif args.command == "describe_all_de":
     describe_all_de()

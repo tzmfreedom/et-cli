@@ -4,8 +4,8 @@ with open('README.md') as f:
     readme = f.read()
 
 setup(
-    name = "et-cli",
-    version = "0.0.3",
+    name="et-cli",
+    version="0.0.3",
     packages=['etcli'],
     description='ExactTarget CLI Tool',
     long_description=readme,
