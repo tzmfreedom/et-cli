@@ -52,7 +52,7 @@ def retrieve_de(customer_key):
     row = ET_Client.ET_DataExtension_Row()
     row.auth_stub = client
     row.CustomerKey = customer_key
-    row.props = fields
+    row.props = [field['Name'] for field in fields]
     response = row.get()
     writer = csv.writer(sys.stdout, quoting=csv.QUOTE_ALL, lineterminator='\n')
     writer.writerow(fields)
@@ -99,19 +99,24 @@ def retrieve_subs():
     getSub.auth_stub = client
     response = getSub.get()
 
+    attributes = []
+    if (hasattr(response.results[0], 'Attributes')):
+        attributes = [attr.Name.encode("utf-8") for attr in response.results[0].Attributes]
+
     writer = csv.writer(sys.stdout, quoting=csv.QUOTE_ALL, lineterminator='\n')
     header = ["SubscriberID", "EmailAddress", "SubscriberKey"]
-    header.extend([attr.Name.encode("utf-8") for attr in response.results[0].Attributes])
+    header.extend(attributes)
     writer.writerow(header)
 
     for result in response.results:
         field_map = {}
-        for field in result.Attributes:
-            field_map[field.Name] = field.Value
+        if (hasattr(result, 'Attributes')):
+            for field in result.Attributes:
+                field_map[field.Name] = field.Value
 
         fields = [result.ID, result.EmailAddress, result.SubscriberKey]
-        for attr in response.results[0].Attributes:
-            val = field_map[attr.Name]
+        for attribute in attributes:
+            val = field_map[attribute]
             if val is None:
                 fields.append("")
             else:
