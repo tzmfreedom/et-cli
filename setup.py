@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name="et-cli",
-    version="0.0.3",
+    version="0.0.4",
     packages=['etcli'],
     description='ExactTarget CLI Tool',
     long_description=readme,
