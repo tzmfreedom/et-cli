@@ -13,7 +13,7 @@ setup(
     author='makoto tajitsu',
     author_email='makoto_tajitsu@hotmail.co.jp',
     license='MIT',
-    scripts=['bin/et'],
+    scripts=['bin/et', 'bin/et.cmd'],
     install_requires=[
         'FuelSDK',
     ],
