@@ -18,15 +18,20 @@ $ et configure
 ## Usage
 * Describe all DataExtension
 ```bash
-$ et describe_all_de -c DATAEXTENSION_EXTERNALKEY
+$ et describe_all_de
 ```
 
-* Describe DataExtension
+* Retrive all rows for DataExtension
 ```bash
-$ et describe_de -c DATAEXTENSION_EXTERNALKEY
+$ et retrieve_de -c DATAEXTENSION_EXTERNALKEY
+```
+* Retrieve Subscribers.
+```bash
+$ et et retrieve_subs
 ```
 
 * Describe DataExtension fields
 ```bash
 $ et describe_fields -c DATAEXTENSION_EXTERNALKEY
 ```
+
