@@ -33,7 +33,7 @@ $ et retrieve_de -c DATAEXTENSION_EXTERNALKEY
 
 Retrieve Subscribers::
 
-$ et et retrieve_subs
+$ et retrieve_subs
 
 Describe DataExtension fields::
 
