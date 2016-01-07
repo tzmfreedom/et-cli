@@ -31,6 +31,18 @@ Retrive all rows for DataExtension::
 
 $ et retrieve_de -c DATAEXTENSION_EXTERNALKEY
 
+Retrive sent event for triggered send::
+
+$ et retrieve_sentevent -c TRIGGERED_SEND_EXTERNALKEY
+
+Retrive open event for triggered send::
+
+$ et retrieve_openevent -c TRIGGERED_SEND_EXTERNALKEY
+
+Retrive bounce event for triggered send::
+
+$ et retrieve_bounceevent -c TRIGGERED_SEND_EXTERNALKEY
+
 Retrieve Subscribers::
 
 $ et retrieve_subs
