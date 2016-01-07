@@ -1,11 +1,12 @@
 from setuptools import setup
+from etcli import __version__
 
 with open('README.rst') as f:
     readme = f.read()
 
 setup(
-    name="et-cli",
-    version="0.0.4",
+    name='et-cli',
+    version=__version__,
     packages=['etcli'],
     description='ExactTarget CLI Tool',
     long_description=readme,
