@@ -23,7 +23,7 @@ class Commands(object):
             return
 
         client_id = raw_input('Input Your ExactTarget Client ID: ')
-        client_secret = raw_input('Input Your ExactTarget Client Secret: ')
+        client_secret = getpass('Input Your ExactTarget Client Secret: ')
 
         fuelsdk_dir = os.path.expanduser('~/.fuelsdk')
         if not os.path.isdir(fuelsdk_dir):
