@@ -6,6 +6,7 @@ import os
 
 import ET_Client
 import et_objects
+from getpass import getpass
 
 CONFIG_PATH = '~/.fuelsdk/config.python'
 
