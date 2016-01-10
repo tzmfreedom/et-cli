@@ -78,19 +78,62 @@ def build_parser():
         type=str, required=True, help='')
     create_de_row_parser.set_defaults(command_name='create_de_row')
 
+    # push message
+    push_message_parser = subparsers.add_parser(
+        'push_message', help='Push message.')
+    push_message_parser.add_argument(
+        '-m', '--message_id',
+        type=str, required=True, help='Push message id')
+    push_message_parser.add_argument(
+        '-s', '--subscriber_keys',
+        type=str, nargs='*', default=[], help='Subscriber list')
+    push_message_parser.add_argument(
+        '-d', '--device_tokens',
+        type=str, nargs='*', default=[], help='Device token list')
+    push_message_parser.add_argument(
+        '-o', '--is_override', action='store_true', help='Is override message')
+    push_message_parser.add_argument(
+        '-a', '--additional_params', help='Additional parameters')
+    push_message_parser.set_defaults(command_name='push_message')
+
+    # fire event
+    fire_event_parser = subparsers.add_parser(
+        'fire_event', help='Fire event for interaction.')
+    fire_event_parser.add_argument(
+        '-e', '--event_definition_key',
+        type=str, required=True, help='Event definition key')
+    fire_event_parser.add_argument(
+        '-s', '--subscriber_key',
+        type=str, required=True, help='Subscriber Key')
+    fire_event_parser.add_argument(
+        '-d', '--data',
+        type=str, help='Event data')
+    fire_event_parser.set_defaults(command_name='fire_event')
+
     return parser
+
+def validate(parser):
+    args = parser.parse_args()
+    if (
+        args.command_name == 'push_message' and
+        len(args.subscriber_keys) == 0 and
+        len(args.device_tokens) == 0
+    ):
+        parser.error('At least one of the arguments --subscriber_keys --device_tokens is required')
+    return args
 
 
 def main():
-    commands = Commands()
     parser = build_parser()
-    args = parser.parse_args()
+    args = validate(parser)
+
+    commands = Commands()
     commands.authenticate()
     try:
         getattr(commands, args.command_name)(args)
     except AttributeError as e:
         print('[{}] command does not exist.'.format(args.command_name))
 
-    
+
 if __name__ == '__main__':
     main()

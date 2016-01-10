@@ -5,6 +5,7 @@ import json
 import os
 
 import ET_Client
+import et_objects
 
 CONFIG_PATH = '~/.fuelsdk/config.python'
 
@@ -16,7 +17,7 @@ class Commands(object):
         else:
             self.client = ET_Client.ET_Client(
                 params={
-                    'clientid': client_id, 
+                    'clientid': client_id,
                     'clientsecret': client_secret
                 }, debug=debug)
 
@@ -330,3 +331,31 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         de4.props = json.loads(args.attributes_json)
         postResponse = de4.post()
         print(json.dumps(postResponse.results))
+
+    def push_message(self, args):
+        pushMessageContact = et_objects.ET_PushMessageContact()
+        pushMessageContact.auth_stub = self.client
+        pushMessageContact.props = {
+            "messageId": args.message_id,
+            "SubscriberKeys": args.subscriber_keys,
+            "DeviceTokens": args.device_tokens
+        }
+        if args.is_override:
+            pushMessageContact.props['Override'] = True
+            input_data = args.additional_params if args.additional_params is not None else sys.stdin.read()
+            pushMessageContact.props.update(json.loads(input_data))
+
+        pushMessageContactResponse = pushMessageContact.post()
+        print(json.dumps(pushMessageContactResponse.results))
+
+    def fire_event(self, args):
+        postInteractionEvent = et_objects.ET_InteractionEvents()
+        postInteractionEvent.auth_stub = self.client
+        input_data = args.data if args.data is not None else sys.stdin.read()
+        postInteractionEvent.props = {
+            "ContactKey": args.subscriber_key,
+            "EventDefinitionKey": args.event_definition_key,
+            "Data": json.loads(input_data)
+        }
+        postInteractionEventResponse = postInteractionEvent.post()
+        print(json.dumps(postInteractionEventResponse.results))
