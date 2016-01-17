@@ -335,6 +335,23 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         deRowResponse = deRow.post()
         print(json.dumps(deRowResponse.results))
 
+    def triggered_send(self, args):
+        sendTrig = ET_Client.ET_TriggeredSend()
+        sendTrig.auth_stub = self.client
+        sendTrig.props = {"CustomerKey": args.customer_key}
+        if args.attributes is None:
+            attributes = {}
+        else:
+            attributes = json.loads(args.attribute_file.read())
+
+        sendTrig.subscribers = [{
+            "EmailAddress": args.email,
+            "SubscriberKey": args.subscriber_key,
+            "Attributes": [{"Name": key, "Value": val} for key, val in attributes]
+        }]
+        sendResponse = sendTrig.send()
+        print(json.dumps(sendResponse.results))
+
     def push_message(self, args):
         pushMessageContact = et_objects.ET_PushMessageContact()
         pushMessageContact.auth_stub = self.client

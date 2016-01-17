@@ -1,11 +1,11 @@
 # coding:utf-8
 import argparse
-import json
+import sys
 from commands import Commands
-
 from . import __version__
 
-def build_parser():    
+
+def build_parser():
     parser = argparse.ArgumentParser(
         description='ExactTarget Command Line Interface Tool.')
     parser.add_argument(
@@ -78,6 +78,24 @@ def build_parser():
         type=str, required=True, help='')
     create_de_row_parser.set_defaults(command_name='create_de_row')
 
+    # triggered send
+    triggered_send_parser = subparsers.add_parser(
+        'triggered_send', help='Triggered Send.')
+    triggered_send_parser.add_argument(
+        '-c', '--customer_key',
+        type=str, required=True, help='Subscriber Key')
+    triggered_send_parser.add_argument(
+        '-s', '--subscriber_key',
+        type=str, required=True, help='Subscriber')
+    triggered_send_parser.add_argument(
+        '-e', '--email',
+        type=str, required=True, help='EmailAddress')
+    triggered_send_parser.add_argument(
+        '-a', '--attribute_file',
+        nargs='?', type=argparse.FileType('r'),
+        const=sys.stdin, default=None, help='Attributes')
+    triggered_send_parser.set_defaults(command_name='triggered_send')
+
     # push message
     push_message_parser = subparsers.add_parser(
         'push_message', help='Push message.')
@@ -112,6 +130,7 @@ def build_parser():
 
     return parser
 
+
 def validate(parser):
     args = parser.parse_args()
     if (
@@ -131,7 +150,7 @@ def main():
     commands.authenticate()
     try:
         getattr(commands, args.command_name)(args)
-    except AttributeError as e:
+    except AttributeError:
         print('[{}] command does not exist.'.format(args.command_name))
 
 
