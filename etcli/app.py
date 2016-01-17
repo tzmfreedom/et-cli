@@ -37,9 +37,6 @@ def build_parser():
     # retrieve subscriber
     retrieve_subs_parser = subparsers.add_parser(
         'retrieve_subs', help='retrieve subscribers.')
-    retrieve_subs_parser.add_argument(
-        '-c', '--customer_key',
-        type=str, required=True, help='')
     retrieve_subs_parser.set_defaults(command_name='retrieve_subs')
 
     # retrieve sent event
@@ -75,10 +72,10 @@ def build_parser():
         'create_de_row', help='create data extension row.')
     create_de_row_parser.add_argument(
         '-c', '--customer_key',
-        type=str, required=True, help='')
+        type=str, default=None, help='')
     create_de_row_parser.add_argument(
         '-n', '--name',
-        type=str, help='')
+        type=str, default=None, help='')
     create_de_row_parser.add_argument(
         '-a', '--attribute_file',
         nargs='?', type=argparse.FileType('r'),
