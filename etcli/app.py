@@ -76,6 +76,13 @@ def build_parser():
     create_de_row_parser.add_argument(
         '-c', '--customer_key',
         type=str, required=True, help='')
+    create_de_row_parser.add_argument(
+        '-n', '--name',
+        type=str, help='')
+    create_de_row_parser.add_argument(
+        '-a', '--attribute_file',
+        nargs='?', type=argparse.FileType('r'),
+        const=sys.stdin, required=True, help='Attributes')
     create_de_row_parser.set_defaults(command_name='create_de_row')
 
     # triggered send
@@ -139,6 +146,13 @@ def validate(parser):
         len(args.device_tokens) == 0
     ):
         parser.error('At least one of the arguments --subscriber_keys --device_tokens is required')
+
+    if (
+        args.command_name == 'create_de_row' and
+        args.customer_key is None and
+        args.name is None
+    ):
+        parser.error('At least one of the arguments --customer_key --name is required')
     return args
 
 
