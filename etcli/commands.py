@@ -4,7 +4,7 @@ import csv
 import json
 import os
 
-import ET_Client
+import FuelSDK
 import et_objects
 from getpass import getpass
 
@@ -14,9 +14,9 @@ CONFIG_PATH = '~/.fuelsdk/config.python'
 class Commands(object):
     def authenticate(self, client_id=None, client_secret=None, debug=False):
         if client_id is None or client_secret is None:
-            self.client = ET_Client.ET_Client(debug=debug)
+            self.client = FuelSDK.ET_Client(debug=debug)
         else:
-            self.client = ET_Client.ET_Client(
+            self.client = FuelSDK.ET_Client(
                 params={
                     'clientid': client_id,
                     'clientsecret': client_secret
@@ -62,7 +62,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             "IsPrimaryKey",
             "IsRequired",
         ]
-        deColumn = ET_Client.ET_DataExtension_Column()
+        deColumn = FuelSDK.ET_DataExtension_Column()
         deColumn.auth_stub = self.client
         deColumn.props = de_target_fields
         deColumn.search_filter = {
@@ -91,7 +91,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         fields = self.describe_de(args)
-        row = ET_Client.ET_DataExtension_Row()
+        row = FuelSDK.ET_DataExtension_Row()
         row.auth_stub = self.client
         row.CustomerKey = args.customer_key
         row.props = [field['Name'] for field in fields]
@@ -109,14 +109,14 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
                     row.append(prop.Value)
             writer.writerow(row)
 
-    def describe_all_de(self):
+    def describe_all_de(self, args):
         """
         describe all data extension.
 
         :param string customer_key: data extension's customer key
         :return: data extension's name array.
         """
-        de = ET_Client.ET_DataExtension()
+        de = FuelSDK.ET_DataExtension()
         de.auth_stub = self.client
         de.props = ["Name", "CustomerKey", "ObjectID"]
         response = de.get()
@@ -132,14 +132,14 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
                 result.ObjectID.encode("utf-8")
             ])
 
-    def retrieve_subs(self):
+    def retrieve_subs(self, args):
         """
         retrieve all subscriber rows.
 
         :param string customer_key: data extension's customer key
         :return: data extension's name array.
         """
-        getSub = ET_Client.ET_Subscriber()
+        getSub = FuelSDK.ET_Subscriber()
         getSub.auth_stub = self.client
         response = getSub.get()
 
@@ -179,7 +179,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :param string customer_key: data extension's customer key
         :return: data extension's name array.
         """
-        getTS = ET_Client.ET_TriggeredSend()
+        getTS = FuelSDK.ET_TriggeredSend()
         getTS.auth_stub = self.client
         getTS.props = [
             "CustomerKey",
@@ -206,7 +206,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         triggeredSendDefinitionObjectID = self.retrieve_triggeredsend(args)
-        getSentEvent = ET_Client.ET_SentEvent()
+        getSentEvent = FuelSDK.ET_SentEvent()
         getSentEvent.auth_stub = self.client
         getSentEvent.props = [
             "SendID",
@@ -246,7 +246,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         triggeredSendDefinitionObjectID = self.retrieve_triggeredsend(args)
-        getOpenEvent = ET_Client.ET_OpenEvent()
+        getOpenEvent = FuelSDK.ET_OpenEvent()
         getOpenEvent.auth_stub = self.client
         getOpenEvent.props = [
             "SendID",
@@ -286,7 +286,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         triggeredSendDefinitionObjectID = self.retrieve_triggeredsend(args)
-        getBounceEvent = ET_Client.ET_BounceEvent()
+        getBounceEvent = FuelSDK.ET_BounceEvent()
         getBounceEvent.auth_stub = self.client
         getBounceEvent.props = [
             "SendID",
@@ -326,7 +326,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :param string attributes_json:
         :return: data extension's name array.
         """
-        deRow = ET_Client.ET_DataExtension_Row()
+        deRow = FuelSDK.ET_DataExtension_Row()
         deRow.CustomerKey = args.customer_key
         deRow.auth_stub = self.client
         args.attributes = json.loads(args.attribute_file.read())
@@ -336,7 +336,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         print(json.dumps(deRowResponse.results))
 
     def triggered_send(self, args):
-        sendTrig = ET_Client.ET_TriggeredSend()
+        sendTrig = FuelSDK.ET_TriggeredSend()
         sendTrig.auth_stub = self.client
         sendTrig.props = {"CustomerKey": args.customer_key}
         if args.attributes is None:
