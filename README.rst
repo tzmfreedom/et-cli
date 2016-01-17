@@ -1,7 +1,7 @@
 et-cli
 ===============
 .. image:: https://travis-ci.org/tzmfreedom/et-cli.svg?branch=master
-  :target: https://travis-ci.org/tzmfreedom
+  :target: https://travis-ci.org/tzmfreedom/et-cli
 
 ExactTarget CLI Tool. This tool use FuelSDK(https://github.com/salesforce-marketingcloud/FuelSDK-Python).
 
