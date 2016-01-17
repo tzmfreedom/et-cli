@@ -32,7 +32,7 @@ def build_parser():
     describe_fields_parser.add_argument(
         '-c', '--customer_key',
         type=str, required=True, help='')
-    describe_fields_parser.set_defaults(command_name='describe_de')
+    describe_fields_parser.set_defaults(command_name='describe_de_command')
 
     # retrieve subscriber
     retrieve_subs_parser = subparsers.add_parser(
@@ -128,8 +128,9 @@ def build_parser():
         '-s', '--subscriber_key',
         type=str, required=True, help='Subscriber Key')
     fire_event_parser.add_argument(
-        '-d', '--data',
-        type=str, help='Event data')
+        '-d', '--data_file',
+        type=argparse.FileType('r'),
+        default=sys.stdin, help='Event data')
     fire_event_parser.set_defaults(command_name='fire_event')
 
     return parser

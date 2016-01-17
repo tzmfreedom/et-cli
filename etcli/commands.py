@@ -45,6 +45,10 @@ clientsecret: {1}
 defaultwsdl: https://webservice.exacttarget.com/etframework.wsdl
 authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".format(client_id, client_secret))
 
+    def describe_de_command(self, args):
+        fields = self.describe_de(args)
+        print(json.dumps(fields))
+
     def describe_de(self, args):
         """
         describe data extension with customer key.
@@ -106,7 +110,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
                 if prop.Value is None:
                     row.append("")
                 else:
-                    row.append(prop.Value)
+                    row.append(prop.Value.encode("utf-8"))
             writer.writerow(row)
 
     def describe_all_de(self, args):
@@ -339,7 +343,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         sendTrig = FuelSDK.ET_TriggeredSend()
         sendTrig.auth_stub = self.client
         sendTrig.props = {"CustomerKey": args.customer_key}
-        if args.attributes is None:
+        if args.attribute_file is None:
             attributes = {}
         else:
             attributes = json.loads(args.attribute_file.read())
@@ -347,10 +351,16 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         sendTrig.subscribers = [{
             "EmailAddress": args.email,
             "SubscriberKey": args.subscriber_key,
-            "Attributes": [{"Name": key, "Value": val} for key, val in attributes]
         }]
+        sendTrig.attributes = [{"Name": key, "Value": val} for key, val in attributes.items()]
         sendResponse = sendTrig.send()
-        print(json.dumps(sendResponse.results))
+        print(json.dumps([{
+            "StatusCode": result.StatusCode,
+            "StatusMessage": result.StatusMessage,
+            "OrdinalID": result.OrdinalID,
+            "NewID": result.NewID,
+            "ErrorCode": result.ErrorCode if hasattr(result, "ErrorCode") else None,
+        } for result in sendResponse.results]))
 
     def push_message(self, args):
         pushMessageContact = et_objects.ET_PushMessageContact()
@@ -371,11 +381,10 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
     def fire_event(self, args):
         postInteractionEvent = et_objects.ET_InteractionEvents()
         postInteractionEvent.auth_stub = self.client
-        input_data = args.data if args.data is not None else sys.stdin.read()
         postInteractionEvent.props = {
             "ContactKey": args.subscriber_key,
             "EventDefinitionKey": args.event_definition_key,
-            "Data": json.loads(input_data)
+            "Data": json.loads(args.data_file.read())
         }
         postInteractionEventResponse = postInteractionEvent.post()
         print(json.dumps(postInteractionEventResponse.results))
