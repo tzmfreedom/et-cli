@@ -62,15 +62,15 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             "IsPrimaryKey",
             "IsRequired",
         ]
-        myDEColumn = ET_Client.ET_DataExtension_Column()
-        myDEColumn.auth_stub = self.client
-        myDEColumn.props = de_target_fields
-        myDEColumn.search_filter = {
+        deColumn = ET_Client.ET_DataExtension_Column()
+        deColumn.auth_stub = self.client
+        deColumn.props = de_target_fields
+        deColumn.search_filter = {
             'Property': 'DataExtension.CustomerKey',
             'SimpleOperator': 'equals',
             'Value': args.customer_key
         }
-        response = myDEColumn.get()
+        response = deColumn.get()
         return [
             self.convert_field_to_dict(result, de_target_fields)
             for result in response.results
@@ -246,9 +246,9 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         triggeredSendDefinitionObjectID = self.retrieve_triggeredsend(args)
-        getSentEvent = ET_Client.ET_OpenEvent()
-        getSentEvent.auth_stub = self.client
-        getSentEvent.props = [
+        getOpenEvent = ET_Client.ET_OpenEvent()
+        getOpenEvent.auth_stub = self.client
+        getOpenEvent.props = [
             "SendID",
             "SubscriberKey",
             "EventDate",
@@ -260,12 +260,12 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             "PartnerKey",
             "SubscriberID"
         ]
-        getSentEvent.search_filter = {
+        getOpenEvent.search_filter = {
             'Property': 'TriggeredSendDefinitionObjectID',
             'SimpleOperator': 'equals',
             'Value': triggeredSendDefinitionObjectID
         }
-        getResponse = getSentEvent.get()
+        getResponse = getOpenEvent.get()
 
         writer = csv.writer(
             sys.stdout, quoting=csv.QUOTE_ALL, lineterminator='\n')
@@ -274,7 +274,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             writer.writerow([result.EventDate, result.SubscriberKey])
 
         while getResponse.more_results:
-            getResponse = getSentEvent.getMoreResults()
+            getResponse = getOpenEvent.getMoreResults()
             for result in getResponse.results:
                 writer.writerow([result.EventDate, result.SubscriberKey])
 
@@ -286,9 +286,9 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :return: data extension's name array.
         """
         triggeredSendDefinitionObjectID = self.retrieve_triggeredsend(args)
-        getSentEvent = ET_Client.ET_BounceEvent()
-        getSentEvent.auth_stub = self.client
-        getSentEvent.props = [
+        getBounceEvent = ET_Client.ET_BounceEvent()
+        getBounceEvent.auth_stub = self.client
+        getBounceEvent.props = [
             "SendID",
             "SubscriberKey",
             "EventDate",
@@ -300,12 +300,12 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             "PartnerKey",
             "SubscriberID"
         ]
-        getSentEvent.search_filter = {
+        getBounceEvent.search_filter = {
             'Property': 'TriggeredSendDefinitionObjectID',
             'SimpleOperator': 'equals',
             'Value': triggeredSendDefinitionObjectID
         }
-        getResponse = getSentEvent.get()
+        getResponse = getBounceEvent.get()
 
         writer = csv.writer(
             sys.stdout, quoting=csv.QUOTE_ALL, lineterminator='\n')
@@ -314,7 +314,7 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
             writer.writerow([result.EventDate, result.SubscriberKey])
 
         while getResponse.more_results:
-            getResponse = getSentEvent.getMoreResults()
+            getResponse = getBounceEvent.getMoreResults()
             for result in getResponse.results:
                 writer.writerow([result.EventDate, result.SubscriberKey])
 
@@ -326,12 +326,14 @@ authenticationurl: https://auth.exacttargetapis.com/v1/requestToken?legacy=1""".
         :param string attributes_json:
         :return: data extension's name array.
         """
-        de4 = ET_Client.ET_DataExtension_Row()
-        de4.CustomerKey = args.customer_key
-        de4.auth_stub = self.client
-        de4.props = json.loads(args.attributes_json)
-        postResponse = de4.post()
-        print(json.dumps(postResponse.results))
+        deRow = ET_Client.ET_DataExtension_Row()
+        deRow.CustomerKey = args.customer_key
+        deRow.auth_stub = self.client
+        args.attributes = json.loads(args.attribute_file.read())
+
+        deRow.props = json.loads(args.attributes_json)
+        deRowResponse = deRow.post()
+        print(json.dumps(deRowResponse.results))
 
     def push_message(self, args):
         pushMessageContact = et_objects.ET_PushMessageContact()
