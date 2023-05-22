@@ -2,6 +2,6 @@ FuelSDK==0.9.3
 funcsigs==0.4
 pbr==1.8.1
 PyJWT==0.1.9
-requests==2.20.0
+requests==2.31.0
 six==1.10.0
 suds==0.4
